@@ -1,37 +1,3 @@
 #!/usr/bin/env ruby
-require 'rubygems'
-require 'bundler'
-Bundler.require
-require 'optparse'
-require 'pp'
-require 'thread'
-require 'smart_colored/extend'
 
-$: << File.dirname(__FILE__)
-require 'haproxy_instance'
-
-options = {}
-OptionParser.new do |opts|
-  opts.banner = "Perform periodic maintenance of Wiffiti's MySQL and Solr resources." 
-  opts.on("-c", "Do extra optimization (can be time consuming)") do |o|
-    options[:optimize] = o
-  end
-end.parse!
-
-@url = 'http://localhost:8080/' + ';csv'
-@hi = HAProxyInstance.new(@url)
-begin
-  deployable = @hi.api.rolling_restartable? 2
-  puts <<-END
-
-  OK:           #{@hi.api.servers.select{|s| s.ok? }.count}
-  Not a backup: #{@hi.api.servers.select{|s| s.ok? and not s.backup? }.count}
-  I/O:          #{@hi.api.bin}/#{@hi.api.bout}
-  OK via BE:    #{@hi.api.check_status and "Yes" or "No"}
-  Deployable?   #{deployable and "Yes" or "No"}
-END
-rescue Exception => e
-  puts e
-  puts e.backtrace
-end
-
+require "haproxy_instance/cli"

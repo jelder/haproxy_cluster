@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
   s.require_path  = "lib"
   
   s.bindir        = "bin"
-  s.executables   = ["haproxy_instance"]
+  s.executables   = ["check_haproxy"]
 
   s.add_dependency 'rest-client'
   s.add_dependency 'smart_colored'
