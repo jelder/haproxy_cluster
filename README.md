@@ -1,4 +1,3 @@
-
 HAProxyInstance and HAProxyCluster
 ==================================
 
@@ -6,20 +5,20 @@ HAProxyInstance and HAProxyCluster
 >
 > "Will restarting myserver01 take the site down?"
 
+While there are already a handfull of HA Proxy abstraction layers on RubyGems, I think we needed one more. I wanted to be able to answer questions like those above and more, quickly, accurately, and easily.
+
 `HAProxyInstance` provides an almost ActiveRecord-like interface to [HA Proxy](http://haproxy.1wt.edu)'s status page.
 
 `HAProxyCluster` provides a simple MapReduce-like framwork on top of `HAProxyInsance`.
 
 `check_haproxy` provides a Nagios- and shell-scripting-friendly interface for `HAProxyCluster`.
 
-While there are already a handfull of HA Proxy abstraction layers on RubyGems, I think we needed one more. I wanted to be able to answer questions like those above and more, quickly, accurately, and easily.
-
 Do you need to do rolling restarts of your application servers? This may be a good starting point.
 
 ```bash
 #!/bin/bash
-tomcats=$(knife search node "roles:tomcat AND chef_environment:production" -i | egrep -v 'items found')
-haproxies=$(knife search node "roles:haproxy AND chef_environment:production" -i | egrep -v 'items found')
+tomcats=$( knife exec -E 'search(:node,"roles:tomcat").each{|n|puts n.fqdn}' )
+haproxies=$( knife exec -E 'search(:node,"roles:haproxy").each{|n|puts n.fqdn}' )
 
 for tomcat in $tomcats ; do
     check_haproxy --eval "wait_for ; tomcat.servers.map{|s|s.ok?} ; end" $haproxies
