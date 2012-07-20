@@ -21,7 +21,7 @@ tomcats=$( knife exec -E 'search(:node,"roles:tomcat").each{|n|puts n.fqdn}' )
 haproxies=$( knife exec -E 'search(:node,"roles:haproxy").each{|n|puts n.fqdn}' )
 
 for tomcat in $tomcats ; do
-    check_haproxy --eval "wait_for ; tomcat.servers.map{|s|s.ok?} ; end" $haproxies
+    check_haproxy --eval "wait_for(true) ; tomcat.servers.map{|s|s.ok?} ; end" $haproxies
     scp myapp.war $tomcat:/opt/tomcat/webapps
 done
 ```

@@ -21,28 +21,4 @@ OptionParser.new do |opts|
   end
 end.parse!
 
-# Junk for testing
-# code_string = <<END
-#   api.servers.select{|s|s.backup?}.map{|s|s.name}
-# END
-
-cluster = HAProxyCluster.new(urls)
-results = cluster.eval code_string
-pp results
-
-# @hi = HAProxyInstance.new(@url)
-# begin
-#   deployable = @hi.api.rolling_restartable? 2
-#   puts <<-END
-# 
-#   OK:           #{@hi.api.servers.select{|s| s.ok? }.count}
-#   Not a backup: #{@hi.api.servers.select{|s| s.ok? and not s.backup? }.count}
-#   I/O:          #{@hi.api.bin}/#{@hi.api.bout}
-#   OK via BE:    #{@hi.api.check_status and "Yes" or "No"}
-#   Deployable?   #{deployable and "Yes" or "No"}
-# END
-# rescue Exception => e
-#   puts e
-#   puts e.backtrace
-# end
-# 
+pp HAProxyCluster.new(urls).eval(code_string)
