@@ -17,8 +17,8 @@ Do you need to do rolling restarts of your application servers? This may be a go
 
 ```bash
 #!/bin/bash
-tomcats=$(knife search node "roles:tomcat AND chef_environment:production" -i | egrep -v 'items found')
-haproxies=$(knife search node "roles:haproxy AND chef_environment:production" -i | egrep -v 'items found')
+tomcats=$( knife exec -E 'search(:node,"roles:tomcat").each{|n|puts n.fqdn}' )
+haproxies=$( knife exec -E 'search(:node,"roles:haproxy").each{|n|puts n.fqdn}' )
 
 for tomcat in $tomcats ; do
     check_haproxy --eval "wait_for ; tomcat.servers.map{|s|s.ok?} ; end" $haproxies
