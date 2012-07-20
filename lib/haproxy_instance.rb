@@ -11,16 +11,20 @@ class HAProxyInstance
   def initialize(source)
     @source = source
     @backends = Hash.new { |h,k| h[k] = Backend.new }
+    if source =~ /https?:/
+      @type = :url
+    else
+      @type = :file
+    end
     update!
   end
 
   def update!
-    if @source =~ /^https?:/
+    case @type
+    when :url
       csv = RestClient.get(@source + ';csv').gsub(/^# /,'').gsub(/,$/,'')
-      type = :url
-    else
+    when :file
       File.read(@source)
-      type = :file
     end
     CSV.parse(csv, { :headers => :first_row, :converters => :all, :header_converters => [:downcase,:symbol] } ) do |row|
       case row[:type]
@@ -36,6 +40,7 @@ class HAProxyInstance
 
   def get_binding; binding; end
   def to_s; @source; end
+  def reload!; update! ; end
 
   # Allow Backends to be accessed by dot-notation
   def method_missing(m, *args, &block)

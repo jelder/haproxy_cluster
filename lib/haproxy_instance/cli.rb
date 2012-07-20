@@ -16,12 +16,15 @@ OptionParser.new do |opts|
   opts.on("-e", "--eval CODE", "Ruby code block to be evaluated on each instance") do |o|
     code_string = o
   end
+  opts.on("-v", "--verbose", "Verbose logging") do
+    RestClient.log = STDERR
+  end
 end.parse!
 
 # Junk for testing
-code_string = <<END
-  api.servers.select{|s|s.backup?}.map{|s|s.name}
-END
+# code_string = <<END
+#   api.servers.select{|s|s.backup?}.map{|s|s.name}
+# END
 
 cluster = HAProxyCluster.new(urls)
 results = cluster.eval code_string

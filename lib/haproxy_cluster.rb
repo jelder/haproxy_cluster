@@ -14,10 +14,14 @@ class HAProxyCluster
   end
 
   def eval(string)
+    threads = []
     results = {}
     @members.each do |member|
-      results[member.to_s] = Kernel.eval(string, member.get_binding)
+      threads << Thread.new do
+        results[member.to_s] = Kernel.eval(string, member.get_binding)
+      end
     end
+    threads.each{|t|t.join}
     return results
   end
 

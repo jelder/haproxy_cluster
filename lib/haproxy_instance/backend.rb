@@ -1,10 +1,11 @@
 require 'haproxy_instance/stats_container'
+require 'haproxy_instance/server_collection'
 
 # Backends contain servers
 class HAProxyInstance::Backend < HAProxyInstance::StatsContainer
 
   def initialize
-    @servers = [] 
+    @servers = HAProxyInstance::ServerCollection.new
     super
   end
 
