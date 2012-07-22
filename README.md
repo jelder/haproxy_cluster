@@ -1,30 +1,34 @@
 HAProxyInstance and HAProxyCluster
 ==================================
 
-> "Can we survive a rolling restart, 3 at a time?"
+> "Can we survive a rolling restart, 2 at a time?"
 >
 > "Will restarting myserver01 take the site down?"
+>
+> "How many concurrent connections right now across all load balancers?"
 
 While there are already a handfull of HA Proxy abstraction layers on RubyGems, I think we needed one more. I wanted to be able to answer questions like those above and more, quickly, accurately, and easily.
 
-`HAProxyInstance` provides an almost ActiveRecord-like interface to [HA Proxy](http://haproxy.1wt.edu)'s status page.
+`HAProxyInstance` provides an ORM for [HA Proxy](http://haproxy.1wt.edu)'s status page.
 
 `HAProxyCluster` provides a simple MapReduce-like framwork on top of `HAProxyInsance`.
 
 `check_haproxy` provides a Nagios- and shell-scripting-friendly interface for `HAProxyCluster`.
 
-Do you need to do rolling restarts of your application servers? This may be a good starting point.
+Do you need to do rolling restarts of your application servers? This example assumes that `option httpchk` has been enabled for `myapp`.
 
 ```bash
-#!/bin/bash
-tomcats=$( knife exec -E 'search(:node,"roles:tomcat").each{|n|puts n.fqdn}' )
-haproxies=$( knife exec -E 'search(:node,"roles:haproxy").each{|n|puts n.fqdn}' )
+#!/bin/sh
+servers="server01.example.com server02.example.com server03.example.com"
+load_balancers="lb01.example.com lb02.example.com"
 
-for tomcat in $tomcats ; do
-    check_haproxy --eval "wait_for(true) ; tomcat.servers.map{|s|s.ok?} ; end" $haproxies
-    scp myapp.war $tomcat:/opt/tomcat/webapps
+for server in $servers ; do
+    check_haproxy --eval "wait_until(true){ myapp.servers.map{|s|s.ok?} }" $load_balancers
+    scp myapp.war $server:/opt/tomcat/webapps
 done
 ```
+
+
 
 Non-Features
 ------------
