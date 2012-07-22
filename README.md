@@ -11,7 +11,7 @@ While there are already a handfull of HA Proxy abstraction layers on RubyGems, I
 
 `HAProxyInstance` provides an ORM for [HA Proxy](http://haproxy.1wt.edu)'s status page.
 
-`HAProxyCluster` provides a simple MapReduce-like framwork on top of `HAProxyInsance`.
+`HAProxyCluster` provides a simple MapReduce-like framework on top of `HAProxyInsance`.
 
 `haproxy_cluster` provides a shell scripting interface for `HAProxyCluster`. Exit codes are meaningful and intended to be useful from Nagios.
 
