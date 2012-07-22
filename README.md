@@ -13,7 +13,7 @@ While there are already a handfull of HA Proxy abstraction layers on RubyGems, I
 
 `HAProxyCluster` provides a simple MapReduce-like framwork on top of `HAProxyInsance`.
 
-`check_haproxy` provides a Nagios- and shell-scripting-friendly interface for `HAProxyCluster`.
+`check_haproxy` provides a shell scripting interface for `HAProxyCluster`. Exit codes are meaningful and intended to be useful from Nagios.
 
 Do you need to do rolling restarts of your application servers? This example assumes that `option httpchk` has been enabled for `myapp`.
 
