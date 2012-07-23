@@ -1,0 +1,3 @@
+#!/usr/bin/env ruby
+
+require "haproxy_cluster/cli"

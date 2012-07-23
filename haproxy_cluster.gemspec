@@ -1,13 +1,13 @@
 # -*- encoding: utf-8 -*-
 $:.push File.expand_path("../lib", __FILE__)
-require "haproxy_instance/version"
+require 'haproxy_cluster/version'
 
 Gem::Specification.new do |s|
-  s.name        = "haproxy_instance"
-  s.version     = HAProxyInstance::VERSION
+  s.name        = "haproxy_cluster"
+  s.version     = HAProxyCluster::VERSION
   s.authors     = ["Jacob Elder"]
   s.email       = ["jacob.elder@gmail.com"]
-  s.homepage    = "https://github.com/jelder/haproxy_instance"
+  s.homepage    = "https://github.com/jelder/haproxy_cluster"
   s.summary     = "A richer interface to HA Proxy"
   s.description = s.summary 
 
@@ -17,8 +17,7 @@ Gem::Specification.new do |s|
   s.require_path  = "lib"
   
   s.bindir        = "bin"
-  s.executables   = ["check_haproxy"]
+  s.executables   = ["haproxy_cluster"]
 
   s.add_dependency 'rest-client'
-  s.add_dependency 'smart_colored'
 end

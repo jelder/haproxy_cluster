@@ -1,8 +1,8 @@
-require 'haproxy_instance'
+require 'haproxy_cluster'
 
 # Backends present summary statistics for the servers they contain, and
 # individual servers also present their own specific data.
-class HAProxyInstance
+class HAProxyCluster
   class StatsContainer
 
     def initialize(stats = {})

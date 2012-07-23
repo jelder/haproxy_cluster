@@ -1,4 +1,4 @@
-require 'haproxy_instance'
+require 'haproxy_cluster/member'
 require 'thread'
 
 class HAProxyCluster
@@ -7,7 +7,7 @@ class HAProxyCluster
     threads = []
     members.each do |url|
       threads << Thread.new do
-        @members << HAProxyInstance.new(url)
+        @members << HAProxyCluster::Member.new(url)
       end
     end
     threads.each{|t|t.join}
