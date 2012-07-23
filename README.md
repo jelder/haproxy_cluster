@@ -15,7 +15,7 @@ While there are already a handfull of HA Proxy abstraction layers on RubyGems, I
 
 `haproxy_cluster` provides a shell scripting interface for `HAProxyCluster`. Exit codes are meaningful and intended to be useful from Nagios.
 
-Do you deploy new code using a sequential restart of application servers? Using this common pattern carelessly can result in too many servers being down at the same time, and cutomers seeing errors. `haproxy_cluster` can prevent this by ensuring that every load balancer agrees that the application is up at each stage in the deployment. In the example below, we will deploy a new WAR to three Tomcat instances which are fronted by two HA Proxy instances. HA Proxy has been configured with `option httpchk /check`, a path which only affirmative status code when the application is ready to serve requests.
+Do you deploy new code using a sequential restart of application servers? Using this common pattern carelessly can result in too many servers being down at the same time, and cutomers seeing errors. `haproxy_cluster` can prevent this by ensuring that every load balancer agrees that the application is up at each stage in the deployment. In the example below, we will deploy a new WAR to three Tomcat instances which are fronted by two HA Proxy instances. HA Proxy has been configured with `option httpchk /check`, a path which only returns an affirmative status code when the application is ready to serve requests.
 
 ```bash
 #!bin/sh
