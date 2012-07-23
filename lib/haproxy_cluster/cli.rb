@@ -27,7 +27,7 @@ OptionParser.new do |opts|
     puts HAProxyCluster::Version
     exit
   end
-  opts.separator "URL should be the root of an HA Proxy status page, either http:// or https://"
+  opts.on_tail "URL should be the root of an HA Proxy status page, either http:// or https://"
 end.parse!
 options.urls = ARGV
 
