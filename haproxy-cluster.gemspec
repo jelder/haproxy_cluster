@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.description = <<-EOF
   Ruby Gem and command line tool for quickly answering questions like, "Can we
   survive a rolling restart?", "How many transactions per second am I seeing?",
-  "What's my session backlog?". Inteded for use within continuous deployment
+  "What's my session backlog?". Intended for use within continuous deployment
   and monitoring solutions.
   EOF
 
