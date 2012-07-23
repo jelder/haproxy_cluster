@@ -31,7 +31,7 @@ The code block passed to `--eval` will not return until every load balancer repo
 
 Maybe you'd like to know how many transactions per second your whole cluster is processing.
 
-    $ haproxy_cluster --eval 'members.map{|m|m.api.rate}.inject(:+)'
+    $ haproxy_cluster --eval 'poll{ puts members.map{|m|m.myapp.rate}.inject(:+) }' $load_balancers
 
 Installation
 ------------
