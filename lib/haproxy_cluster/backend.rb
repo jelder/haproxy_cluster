@@ -16,12 +16,12 @@ class HAProxyCluster
       self.pxname
     end
 
-    def rolling_restartable? (number_to_restart = 1)
+    def rolling_restartable? (enough = 80)
       up_servers = @servers.map{ |s| s.ok? }.count
       if up_servers == 0
         return true    # All servers are down; can't hurt!
-      elsif up_servers - number_to_restart >= up_servers / 2
-        return true    # Half of servers would still be up, go ahead.
+      elsif Rational(up_servers,@servers.count) >= Rational(enough,100)
+        return true    # Minumum % is satisfied
       else
         return false   # Not enough servers are up to handle restarting #{number_to_restart} at a time.
       end
