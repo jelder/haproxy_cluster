@@ -3,7 +3,9 @@ haproxy-cluster
 
 > "Can we survive a rolling restart?"
 >
-> "How many concurrent connections right now across all load balancers?"
+> "How many transactions per second am I seeing?"
+>
+> "What's my session backlog?"
 
 While there are already a handfull of [HA Proxy](http://haproxy.1wt.edu) abstraction layers on RubyGems, I wanted to be able to answer questions like those above and more, quickly, accurately, and easily. So here's one more for the pile.
 

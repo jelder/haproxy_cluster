@@ -9,7 +9,12 @@ Gem::Specification.new do |s|
   s.email       = ["jacob.elder@gmail.com"]
   s.homepage    = "https://github.com/jelder/haproxy_cluster"
   s.summary     = "Inspect and manipulate collections of HA Proxy instances"
-  s.description = File.read("README.md")
+  s.description = <<-EOF
+  Ruby Gem and command line tool for quickly answering questions like, "Can we
+  survive a rolling restart?", "How many transactions per second am I seeing?",
+  "What's my session backlog?". Inteded for use within continuous deployment
+  and monitoring solutions.
+  EOF
 
   s.required_ruby_version     = '~> 1.9.3'
 
