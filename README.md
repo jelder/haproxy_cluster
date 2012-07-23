@@ -1,17 +1,15 @@
 haproxy-cluster
 ===============
 
-> "Can we survive a rolling restart, 2 at a time?"
->
-> "Will restarting myserver01 take the site down?"
+> "Can we survive a rolling restart?"
 >
 > "How many concurrent connections right now across all load balancers?"
 
-While there are already a handfull of HA Proxy abstraction layers on RubyGems, I think we needed one more. I wanted to be able to answer questions like those above and more, quickly, accurately, and easily.
+While there are already a handfull of [HA Proxy](http://haproxy.1wt.edu) abstraction layers on RubyGems, I wanted to be able to answer questions like those above and more, quickly, accurately, and easily. So here's one more for the pile.
 
-`HAProxyInstance` provides an ORM for [HA Proxy](http://haproxy.1wt.edu)'s status page.
+`HAProxyCluster::Member` provides an ORM for HA Proxy's status page.
 
-`HAProxyCluster` provides a simple MapReduce-like framework on top of `HAProxyInsance`.
+`HAProxyCluster` provides a simple map/reduce-inspired framework on top of `HAProxyCluster::Member`.
 
 `haproxy_cluster` provides a shell scripting interface for `HAProxyCluster`. Exit codes are meaningful and intended to be useful from Nagios.
 
@@ -20,8 +18,8 @@ Do you deploy new code using a sequential restart of application servers? Using 
 ```bash
 #!bin/bash
 set -o errexit
-servers="server01.example.com server02.example.com server03.example.com"
-load_balancers="lb01.example.com lb02.example.com"
+servers="server1.example.com server2.example.com server3.example.com"
+load_balancers="https://lb1.example.com:8888 http://lb2.example.com:8888"
 
 for server in $servers ; do
     haproxy_cluster --timeout=300 --eval "wait_until(true){ myapp.rolling_restartable? }" $load_balancers
@@ -31,11 +29,22 @@ done
 
 The code block passed to `--eval` will not return until every load balancer reports that at least 80% of the backend servers defined for "myapp" are ready to serve requests. If this takes more than 5 minutes (300 seconds), the whole deployment is halted.
 
+Maybe you'd like to know how many transactions per second your whole cluster is processing.
+
+    $ haproxy_cluster --eval 'members.map{|m|m.api.rate}.inject(:+)'
+
+Installation
+------------
+
+`gem install haproxy-cluster`
+
+Requires Ruby 1.9.2 and depends on RestClient.
+
 Non-Features
 ------------
 
 * Doesn't try to modify configuration files. Use [haproxy-tools](https://github.com/subakva/haproxy-tools), [rhaproxy](https://github.com/jjuliano/rhaproxy), [haproxy_join](https://github.com/joewilliams/haproxy_join), or better yet, [Chef](http://www.opscode.com/chef) for that.
-* Doesn't talk to sockets, yet. Use [haproxy-ruby](https://github.com/inkel/haproxy-ruby) for now if you need this.
+* Doesn't talk to sockets, yet. Use [haproxy-ruby](https://github.com/inkel/haproxy-ruby) for now if you need this. I intend to add support for this using `Net::SSH` and `socat(1)` but for now HTTP is enough for my needs.
 
 ProTip
 ------

@@ -2,7 +2,6 @@ require 'rubygems'
 require 'optparse'
 require 'pp'
 require 'thread'
-require 'smart_colored/extend'
 require 'haproxy_cluster'
 
 code_string = ""
@@ -19,5 +18,13 @@ end.parse!
 urls = ARGV
 
 cluster = HAProxyCluster.new(urls)
-pp Kernel.eval(code_string, cluster.instance_eval("binding"))
+result = Kernel.eval(code_string, cluster.instance_eval("binding"))
+case result.class.to_s
+when "TrueClass","FalseClass"
+  exit result.true ? 0 : 1
+when "Hash", "Array"
+  pp result
+else
+  puts result
+end
 

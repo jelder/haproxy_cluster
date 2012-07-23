@@ -13,6 +13,21 @@ class HAProxyCluster
     threads.each{|t|t.join}
   end
 
+  attr_accessor :members
+
+  # Poll the cluster, executing the given block with fresh data at the
+  # prescribed interval.
+  def poll(interval = 1.0)
+    first = true
+    loop do
+      start = Time.now
+      map { poll! } unless first
+      first = false
+      yield
+      sleep interval - (Time.now - start)
+    end
+  end
+
   # Poll the entire cluster using exponential backoff until the the given
   # block's return value always matches the condition (expressed as boolean or
   # range).
