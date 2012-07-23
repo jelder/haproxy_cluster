@@ -24,7 +24,7 @@ OptionParser.new do |opts|
     options.timeout = o.to_f
   end
   opts.on_tail("--version", "Show version") do
-    puts HAProxyCluster::Version
+    puts HAProxyCluster::VERSION
     exit
   end
   opts.on_tail "URL should be the root of an HA Proxy status page, either http:// or https://"
