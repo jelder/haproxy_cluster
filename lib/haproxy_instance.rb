@@ -16,10 +16,10 @@ class HAProxyInstance
     else
       @type = :file
     end
-    update!
+    poll!
   end
 
-  def update!
+  def poll!
     case @type
     when :url
       csv = RestClient.get(@source + ';csv').gsub(/^# /,'').gsub(/,$/,'')
@@ -40,7 +40,6 @@ class HAProxyInstance
 
   def get_binding; binding; end
   def to_s; @source; end
-  def reload!; update! ; end
 
   # Allow Backends to be accessed by dot-notation
   def method_missing(m, *args, &block)

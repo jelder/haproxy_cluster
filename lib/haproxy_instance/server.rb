@@ -34,7 +34,7 @@ class HAProxyInstance::Server < HAProxyInstance::StatsContainer
     until self.ok?
       raise Timeout if Time.now > start + 10
       sleep 1
-      @haproxy_instance.reload!
+      @haproxy_instance.poll!
     end
     return true
   end
@@ -45,7 +45,7 @@ class HAProxyInstance::Server < HAProxyInstance::StatsContainer
     case @haproxy_instance.type
     when :url
       RestClient.post @haproxy_instance.source, { :s => self.name, :action => how, :b => self.pxname }
-      @haproxy_instance.reload!
+      @haproxy_instance.poll!
     else
       raise "Not implemented: #{how} on #{@haproxy_instance.type}"
     end
