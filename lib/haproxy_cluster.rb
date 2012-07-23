@@ -25,4 +25,23 @@ class HAProxyCluster
     return results
   end
 
+  # Poll the entire cluster using exponential backoff until the the given block's return value matches the condition (expressed as boolean or range).
+  # 
+  # wait_for(1!=1){false}
+  # wait_for(1==1){true}
+  # wait_for(1..3){2}
+  def wait_for(condition)
+    raise ArgumentError.new("block required") unless block_given?
+    # eval here
+    case condition.class.to_s.downcase.to_sym
+    when :range
+      puts "range: #{condition}"
+    when :trueclass, :falseclass
+      puts "boolean: #{condition}"
+    else
+       raise ArgumentError.new("TrueClass, FalseClass, or Range expected")
+    end
+  end
+
+
 end
