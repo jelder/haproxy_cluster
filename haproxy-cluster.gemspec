@@ -8,9 +8,9 @@ Gem::Specification.new do |s|
   s.authors     = ["Jacob Elder"]
   s.email       = ["jacob.elder@gmail.com"]
   s.homepage    = "https://github.com/jelder/haproxy_cluster"
-  s.summary     = "Inspect and manipulate collections of HA Proxy instances"
+  s.summary     = "A DSL for inspecting and manipulating groups of HA Proxy instances."
   s.description = <<-EOF
-  Ruby Gem and command line tool for quickly answering questions like, "Can we
+  Gem and command line tool for quickly answering questions like, "Can we
   survive a rolling restart?", "How many transactions per second am I seeing?",
   "What's my session backlog?". Intended for use within continuous deployment
   and monitoring solutions.
