@@ -41,11 +41,11 @@ class HAProxyCluster
   # This block would not return until every member of the cluster is available
   # to serve requests.
   # 
-  # wait_for(1!=1){false} #=> true
-  # wait_for(1==1){true}  #=> true
-  # wait_for(1..3){2}     #=> true
-  # wait_for(true){sleep} #=> Timeout
-  def wait_for (condition, &code)
+  # wait_until(1!=1){false} #=> true
+  # wait_until(1==1){true}  #=> true
+  # wait_until(1..3){2}     #=> true
+  # wait_until(true){sleep} #=> Timeout
+  def wait_until (condition, &code)
     results = map(&code)
     delay = 1.5
     loop do
