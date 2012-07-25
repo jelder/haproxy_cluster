@@ -48,7 +48,7 @@ Non-Features
 ------------
 
 * Doesn't try to modify configuration files. Use [haproxy-tools](https://github.com/subakva/haproxy-tools), [rhaproxy](https://github.com/jjuliano/rhaproxy), [haproxy_join](https://github.com/joewilliams/haproxy_join), or better yet, [Chef](http://www.opscode.com/chef) for that.
-* Doesn't talk to sockets, yet. Use [haproxy-ruby](https://github.com/inkel/haproxy-ruby) for now if you need this. I intend to add support for this using `Net::SSH` and `socat(1)` but for now HTTP is enough for my needs. Please comment on Issue #6 if you care about this feature.
+* Doesn't talk to sockets, yet. Use [haproxy-ruby](https://github.com/inkel/haproxy-ruby) for now if you need this. I intend to add support for this using `Net::SSH` and `socat(1)` but for now HTTP is enough for my needs. Please comment on Issue \#6 if you care about this feature.
 
 ProTip
 ------
