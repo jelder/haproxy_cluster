@@ -1,0 +1,7 @@
+# pxname,svname,qcur,qmax,scur,smax,slim,stot,bin,bout,dreq,dresp,ereq,econ,eresp,wretr,wredis,status,weight,act,bck,chkfail,chkdown,lastchg,downtime,qlimit,pid,iid,sid,throttle,lbtot,tracked,type,rate,rate_lim,rate_max,check_status,check_code,check_duration,hrsp_1xx,hrsp_2xx,hrsp_3xx,hrsp_4xx,hrsp_5xx,hrsp_other,hanafail,req_rate,req_rate_max,req_tot,cli_abrt,srv_abrt,
+stats,FRONTEND,,,1,1,19500,4,521,15775,0,0,0,,,,,OPEN,,,,,,,,,1,1,0,,,,0,1,0,1,,,,0,3,0,0,0,0,,1,1,4,,,
+stats,BACKEND,0,0,0,0,19500,0,521,15775,0,0,,0,0,0,0,UP,0,0,0,,0,1183030,0,,1,1,0,,0,,1,0,,0,,,,0,0,0,0,0,0,,,,,0,0,
+http,FRONTEND,,,1,334,19500,855244,1017388150,3072093863,0,0,541716,,,,,OPEN,,,,,,,,,1,2,0,,,,0,0,0,491,,,,0,312570,0,542459,199,15,,0,476,855243,,,
+api,api01-us-east-1a-production,0,0,0,295,,272567,1009793000,2947014062,,0,,21,8,42,0,UP,1,1,0,113,55,55891,896,,1,3,1,,272525,,2,0,,410,L7OK,200,1,0,271823,0,617,44,0,0,,,,17,3,
+api,api01-us-east-1c-production,0,0,0,2,,75,1750999,2973797,,0,,1,0,2,0,UP,1,0,1,121,55,55876,930,,1,3,2,,73,,2,0,,4,L7OK,200,4,0,72,0,0,0,0,0,,,,0,0,
+api,BACKEND,0,0,0,295,0,273246,1012391772,2952013453,0,0,,141,8,44,0,UP,1,1,1,,19,55891,338,,1,3,0,,272598,,1,0,,410,,,,0,272298,0,743,190,15,,,,,17,3,

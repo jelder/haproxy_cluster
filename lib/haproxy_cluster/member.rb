@@ -20,13 +20,13 @@ class HAProxyCluster
     end
 
     def poll!
-      case @type
+      csv = case @type
       when :url
-        csv = RestClient.get(@source + ';csv').gsub(/^# /,'').gsub(/,$/,'')
+        RestClient.get(@source + ';csv')
       when :file
         File.read(@source)
       end
-      CSV.parse(csv, { :headers => :first_row, :converters => :all, :header_converters => [:downcase,:symbol] } ) do |row|
+      CSV.parse(csv.gsub(/^# /,'').gsub(/,$/,''), { :headers => :first_row, :converters => :all, :header_converters => [:downcase,:symbol] } ) do |row|
         case row[:type]
         when BACKEND
           @backends[ row[:pxname].to_sym ].stats.merge! row.to_hash 
