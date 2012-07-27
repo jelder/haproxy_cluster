@@ -58,3 +58,7 @@ HA Proxy's awesome creator Willy Tarrreau loves [big text files](http://haproxy.
 * http://code.google.com/p/haproxy-docs/
 * http://cbonte.github.com/haproxy-dconv/configuration-1.5.html
 
+
+<hr/>
+[![Build Status](https://secure.travis-ci.org/jelder/haproxy_cluster.png)](http://travis-ci.org/jelder/haproxy_cluster)
+
