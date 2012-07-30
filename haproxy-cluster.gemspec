@@ -25,4 +25,7 @@ Gem::Specification.new do |s|
   s.executables   = ["haproxy_cluster"]
 
   s.add_dependency 'rest-client'
+
+  s.add_development_dependency "test-unit"
+  s.add_development_dependency "webmock"
 end
