@@ -40,7 +40,7 @@ haproxy_cluster --eval 'poll{ puts members.map{|m|m.myapp.rate}.inject(:+) }' $l
 Perhaps there's a particular server which needs to be removed from the cluster quickly and temporarily.
 
 ```bash
-haproxy_cluster --eval 'each_member{ myapp.servers.find("server03").disable! }' $load_balancers
+haproxy_cluster --eval 'each_member{ myapp.servers.find("server3").disable! }' $load_balancers
 ```
 
 
