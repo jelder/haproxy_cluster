@@ -1,7 +1,12 @@
 require 'haproxy_cluster/member'
+require 'timeout'
 require 'thread'
 
 class HAProxyCluster
+
+  Inf = +1.0/0.0
+  NegInf = -1.0/0.0
+
   def initialize(members = [])
     @members = []
     threads = []
@@ -21,51 +26,59 @@ class HAProxyCluster
     first = true
     loop do
       start = Time.now
-      map { poll! } unless first
+      each_member { poll! } unless first
       first = false
       yield
       sleep interval - (Time.now - start)
     end
   end
 
-  # Poll the entire cluster using exponential backoff until the the given
-  # block's return value always matches the condition (expressed as boolean or
-  # range).
-  #
-  # A common form of this is:
-  #
-  #   wait_for(true) do
-  #     api.servers.map{|s|s.ok?}
-  #   end
+  # Poll the entire cluster until the the given block's return value always
+  # matches the condition (expressed as boolean or range).
   #
   # This block would not return until every member of the cluster is available
   # to serve requests.
-  # 
-  # wait_until(1!=1){false} #=> true
-  # wait_until(1==1){true}  #=> true
-  # wait_until(1..3){2}     #=> true
-  # wait_until(true){sleep} #=> Timeout
-  def wait_until (condition, &code)
-    results = map(&code)
-    delay = 1.5
-    loop do
-      if reduce(condition, results.values.flatten)
-        return true
+  #
+  #   wait_for(:condition => true) do
+  #     api.servers.map{|s|s.ok?}
+  #   end
+  #
+  # The constants `Inf` and `NegInf` (representing infinity and negative
+  # infinity respectively) are available, which enables less than/greater than
+  # expressions in the form of `Range`s.
+  #
+  # Parameters:
+  #
+  # * :condition, anything accepted by `check_condition`
+  # * :interval, check interval (default 2 seconds, same as HA Proxy) 
+  # * :timeout, give up after this number of seconds 
+  # * :min_checks, require :condtion to pass this many times in a row
+  #
+  def wait_until (options = {}, &code)
+    opts = {
+      :condition => true,
+      :interval => 2.0,
+      :timeout => 300,
+      :min_checks => 1
+    }.merge options
+    Timeout::timeout(opts[:timeout]) do
+      history = []
+      loop do
+        results = each_member(&code)
+
+        # Break out as soon as we reach :min_checks in a row
+        history << check_condition(opts[:condition], results.values.flatten)
+        return true if history.last(opts[:min_checks]) == [true] * opts[:min_checks]
+
+        sleep opts[:interval]
+        each_member { poll! }
       end
-      if delay > 60
-        puts "Too many timeouts, giving up"
-        return false
-      end
-      delay *= 2
-      sleep delay
-      map { poll! }
-      results = map(&code)
     end
   end
 
   # Run the specified code against every memeber of the cluster. Results are
   # returned as a Hash, with member.to_s being the key.
-  def map (&code)
+  def each_member (&code)
     threads = []
     results = {}
     @members.each do |member|
@@ -80,7 +93,12 @@ class HAProxyCluster
   # Return true or false depending on the relationship between `condition` and `values`.
   # `condition` may be specified as true, false, or a Range object.
   # `values` is an Array of whatever type is appropriate for the condition.
-  def reduce (condition, values)
+  #
+  #   check_condition(0!=1,   [true])         #=> true
+  #   check_condition(1==1,   [true])         #=> true
+  #   check_condition(3..Inf, [2,2])          #=> false
+  #   check_condition(true,   [true,false])   #=> raise Timeout::timeout
+  def check_condition (condition, values)
     case condition.class.to_s
     when "Range"
       values.each{ |v| return false unless condition.cover? v }

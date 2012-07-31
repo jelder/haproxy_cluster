@@ -44,7 +44,7 @@ if options.code_string
 
   case result.class.to_s
   when "TrueClass","FalseClass"
-    exit result == true ? 0 : 1
+    exit result == true ? 0 : 2
   when "Hash"
     pp result
   when "Array"

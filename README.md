@@ -24,12 +24,12 @@ servers="server1.example.com server2.example.com server3.example.com"
 load_balancers="https://lb1.example.com:8888 http://lb2.example.com:8888"
 
 for server in $servers ; do
-    haproxy_cluster --timeout=300 --eval "wait_until(true){ myapp.rolling_restartable? }" $load_balancers
+    haproxy_cluster --eval "wait_until(:condition => true, :min_checks => 3){ myapp.rolling_restartable? }" $load_balancers
     scp myapp.war $server:/opt/tomcat/webapps
 done
 ```
 
-The code block passed to `--eval` will not return until every load balancer reports that at least 80% of the backend servers defined for "myapp" are ready to serve requests. If this takes more than 5 minutes (300 seconds), the whole deployment is halted.
+The code block passed to `--eval` will not return until every load balancer reports that at least 80% of the backend servers defined for "myapp" are ready to serve requests (or all of them are down). This condition must pass 3 times in a row for it to be considered valid. If this takes more than 5 minutes (300 seconds), the whole deployment is halted.
 
 Maybe you'd like to know how many transactions per second your whole cluster is processing.
 
@@ -42,7 +42,7 @@ Installation
 
 `gem install haproxy-cluster`
 
-Requires Ruby 1.9.2 and depends on RestClient.
+Requires Ruby 1.9.3 and depends on RestClient.
 
 Non-Features
 ------------
