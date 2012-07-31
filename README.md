@@ -24,7 +24,7 @@ servers="server1.example.com server2.example.com server3.example.com"
 load_balancers="https://lb1.example.com:8888 http://lb2.example.com:8888"
 
 for server in $servers ; do
-    haproxy_cluster --eval "wait_until(:condition => true, :min_checks => 3){ myapp.rolling_restartable? }" $load_balancers
+    haproxy_cluster --eval "wait_until(:condition => true){ myapp.rolling_restartable? }" $load_balancers
     scp myapp.war $server:/opt/tomcat/webapps
 done
 ```

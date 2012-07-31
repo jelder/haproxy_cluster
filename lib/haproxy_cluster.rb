@@ -59,7 +59,7 @@ class HAProxyCluster
       :condition => true,
       :interval => 2.0,
       :timeout => 300,
-      :min_checks => 1
+      :min_checks => 3
     }.merge options
     Timeout::timeout(opts[:timeout]) do
       history = []
