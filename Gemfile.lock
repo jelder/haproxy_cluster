@@ -1,20 +1,20 @@
 PATH
   remote: .
   specs:
-    haproxy-cluster (0.0.4)
+    haproxy-cluster (0.0.5)
       rest-client
 
 GEM
   remote: http://rubygems.org/
   specs:
-    addressable (2.3.1)
+    addressable (2.2.8)
     crack (0.3.1)
     mime-types (1.19)
     rest-client (1.6.7)
       mime-types (>= 1.16)
     test-unit (2.5.1)
-    webmock (1.8.7)
-      addressable (>= 2.2.7)
+    webmock (1.8.8)
+      addressable (~> 2.2.8)
       crack (>= 0.1.7)
 
 PLATFORMS
