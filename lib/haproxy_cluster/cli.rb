@@ -7,6 +7,8 @@ require 'timeout'
 require 'haproxy_cluster/version'
 require 'haproxy_cluster'
 
+Signal.trap("INT"){exit 1}
+
 options = OpenStruct.new
 OptionParser.new do |opts|
   opts.banner = "Usage: #{File.basename $0} ARGS URL [URL] [...]"
@@ -30,7 +32,6 @@ OptionParser.new do |opts|
   opts.on_tail "URL should be the root of an HA Proxy status page, either http:// or https://"
 end.parse!
 options.urls = ARGV
-
 
 if options.code_string
 
