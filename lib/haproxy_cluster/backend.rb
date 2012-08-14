@@ -1,12 +1,11 @@
 require 'haproxy_cluster/stats_container'
-require 'haproxy_cluster/server_collection'
 
 class HAProxyCluster
 
   class Backend < StatsContainer
 
     def initialize
-      @servers = ServerCollection.new
+      @servers = {} 
       super
     end
 
@@ -17,7 +16,7 @@ class HAProxyCluster
     end
 
     def rolling_restartable? (enough = 80)
-      up_servers = @servers.map{ |s| s.ok? }.count
+      up_servers = @servers.map{ |name,server| s.ok? }.count
       if up_servers == 0
         return true    # All servers are down; can't hurt!
       elsif Rational(up_servers,@servers.count) >= Rational(enough,100)

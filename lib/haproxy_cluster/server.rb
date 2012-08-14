@@ -8,6 +8,7 @@ class HAProxyCluster
       @member = member
       super stats
     end
+    attr_reader :member
 
     def name
       self.svname 
