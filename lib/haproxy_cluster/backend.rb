@@ -19,7 +19,7 @@ class HAProxyCluster
     end
 
     def rolling_restartable? (enough = 80)
-      up_servers = @servers.map{ |name,server| s.ok? }.count
+      up_servers = @servers.map{ |name,server| server.ok? }.count
       if up_servers == 0
         @member.log.warn { "All servers are down; can't hurt!" }
         return true
