@@ -29,7 +29,12 @@ class HAProxyCluster
       each_member { poll! } unless first
       first = false
       yield
-      sleep interval - (Time.now - start)
+      delay = Time.now - start
+      if delay >= interval
+        sleep interval
+      else
+        sleep interval - delay
+      end
     end
   end
 
@@ -52,7 +57,7 @@ class HAProxyCluster
   # * :condition, anything accepted by `check_condition`
   # * :interval, check interval (default 2 seconds, same as HA Proxy) 
   # * :timeout, give up after this number of seconds 
-  # * :min_checks, require :condtion to pass this many times in a row
+  # * :min_checks, require :condition to pass this many times in a row
   #
   def wait_until (options = {}, &code)
     opts = {

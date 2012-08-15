@@ -3,13 +3,16 @@ require 'haproxy_cluster/stats_container'
 class HAProxyCluster
 
   class Backend < StatsContainer
+    TYPE_ID = 1
 
-    def initialize
-      @servers = {} 
-      super
+    def initialize(stats,member = nil)
+      @member = member
+      @servers = Hash.new { |h,k| h[k] = Server.new({},@member) }
+      super stats
     end
 
     attr_accessor :servers
+    attr_reader :member
 
     def name
       self.pxname
@@ -18,11 +21,14 @@ class HAProxyCluster
     def rolling_restartable? (enough = 80)
       up_servers = @servers.map{ |name,server| s.ok? }.count
       if up_servers == 0
-        return true    # All servers are down; can't hurt!
+        @member.log.warn { "All servers are down; can't hurt!" }
+        return true
       elsif Rational(up_servers,@servers.count) >= Rational(enough,100)
-        return true    # Minumum % is satisfied
+        @member.log.info { "#{up_servers}/#{@servers.count} is at least #{enough}%!" }
+        return true
       else
-        return false   # Not enough servers are up to handle restarting #{number_to_restart} at a time.
+        @member.log.warn { "Insufficient capacity to handle a rolling restart at this time." }
+        return false
       end
     end
 

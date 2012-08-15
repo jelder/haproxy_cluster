@@ -3,8 +3,9 @@ require 'haproxy_cluster/stats_container'
 class HAProxyCluster
 
   class Server < StatsContainer
+    TYPE_ID = 2
 
-    def initialize (stats,member)
+    def initialize(stats,member = nil)
       @member = member
       super stats
     end

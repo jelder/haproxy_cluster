@@ -7,18 +7,25 @@ class HAProxyCluster
 
     def initialize(stats = {})
       @stats = stats
+      @monitor_fields = [:status]
     end
+
     attr_accessor :stats
 
-    def critical_fields(fields = [:status,:rate]) fields ; end
+    def monitor(field)
+      @monitor_fields << field.to_sym
+    end
 
-    def merge!(new)
-      critical_fields.each do |field|
-        if @stats[field] != new[field]
-          STDERR.puts "#{self.member.name} noticed a #{field} transition on #{self.name}: #{@stats[field]} -> #{new[field]}"
+    def stats=(new)
+      old = @stats
+      @stats = new
+      @monitor_fields.each do |field|
+        if new.has_key? field and not old.has_key? field
+          @member.log.info { "#{self.member.name} believes #{name} #{field} is #{new[field]}" }
+        elsif old[field] != new[field]
+          @member.log.info { "#{self.member.name} noticed a #{field} transition on #{name}: #{old[field]} -> #{new[field]}" }
         end
       end
-      @stats.merge! new
     end
 
     def method_missing(m, *args, &block)
