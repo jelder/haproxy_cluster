@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    haproxy-cluster (0.0.6)
+    haproxy-cluster (0.0.7)
       rest-client
 
 GEM

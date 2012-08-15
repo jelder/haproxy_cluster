@@ -19,12 +19,12 @@ class HAProxyCluster
     end
 
     def rolling_restartable? (enough = 80)
-      up_servers = @servers.map{ |name,server| server.ok? }.count
+      up_servers = @servers.select{ |name,server| server.ok? }
       if up_servers == 0
         @member.log.warn { "All servers are down; can't hurt!" }
         return true
-      elsif Rational(up_servers,@servers.count) >= Rational(enough,100)
-        @member.log.debug { "#{up_servers}/#{@servers.count} is at least #{enough}%!" }
+      elsif Rational(up_servers.count,@servers.count) >= Rational(enough,100)
+        @member.log.info { "#{up_servers.count}/#{@servers.count} is at least #{enough}%, so #{name} is rolling restartable." }
         return true
       else
         @member.log.warn { "Insufficient capacity to handle a rolling restart at this time." }
