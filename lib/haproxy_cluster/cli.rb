@@ -10,14 +10,18 @@ require 'haproxy_cluster'
 Signal.trap("INT"){exit 1}
 
 options = OpenStruct.new
+options.log_level = Logger::INFO
 OptionParser.new do |opts|
   opts.banner = "Usage: #{File.basename $0} ARGS URL [URL] [...]"
   opts.on("-e", "--eval=CODE", "Ruby code block to be evaluated") do |o|
     options.code_string = o
   end
   opts.on("-v", "--verbose", "Verbose logging") do
-    # TODO Need better coverage here
     RestClient.log = STDERR
+    options.log_level = Logger::DEBUG
+  end
+  opts.on("-q", "--quiet", "Only report problems") do
+    options.log_level = Logger::WARN
   end
   opts.on("--csv", "Assume result will be an Array of Arrays and emit as CSV") do
     options.csv = true
@@ -37,10 +41,10 @@ if options.code_string
 
   if options.timeout
     result = Timeout::timeout(options.timeout) do 
-      Kernel.eval( options.code_string, HAProxyCluster.new(options.urls).instance_eval("binding") )
+      Kernel.eval( options.code_string, HAProxyCluster.new(options.urls, options.log_level).instance_eval("binding") )
     end
   else
-    result = Kernel.eval( options.code_string, HAProxyCluster.new(options.urls).instance_eval("binding") )
+    result = Kernel.eval( options.code_string, HAProxyCluster.new(options.urls, options.log_level).instance_eval("binding") )
   end
 
   case result.class.to_s

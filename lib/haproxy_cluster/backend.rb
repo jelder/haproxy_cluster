@@ -24,7 +24,7 @@ class HAProxyCluster
         @member.log.warn { "All servers are down; can't hurt!" }
         return true
       elsif Rational(up_servers,@servers.count) >= Rational(enough,100)
-        @member.log.info { "#{up_servers}/#{@servers.count} is at least #{enough}%!" }
+        @member.log.debug { "#{up_servers}/#{@servers.count} is at least #{enough}%!" }
         return true
       else
         @member.log.warn { "Insufficient capacity to handle a rolling restart at this time." }

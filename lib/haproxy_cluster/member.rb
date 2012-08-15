@@ -1,5 +1,4 @@
 require 'csv'
-require 'logger'
 require 'rest-client'
 require 'haproxy_cluster/backend'
 require 'haproxy_cluster/server'
@@ -7,13 +6,9 @@ require 'haproxy_cluster/server'
 class HAProxyCluster
   class Member
 
-    def initialize(source)
+    def initialize(source,log)
       @source = source
-      @log = Logger.new(STDOUT)
-      original_formatter = Logger::Formatter.new
-      @log.formatter = proc { |severity,datetime,progname,msg|
-        original_formatter.call(severity,datetime,"HAProxyCluster",msg)
-      }
+      @log = log
       @backends = Hash.new { |h,k| h[k] = Backend.new({},self) }
       if source =~ /https?:/
         @type = :url

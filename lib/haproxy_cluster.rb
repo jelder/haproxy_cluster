@@ -1,5 +1,6 @@
 require 'haproxy_cluster/member'
 require 'timeout'
+require 'logger'
 require 'thread'
 
 class HAProxyCluster
@@ -7,18 +8,25 @@ class HAProxyCluster
   Inf = +1.0/0.0
   NegInf = -1.0/0.0
 
-  def initialize(members = [])
+  def initialize(members = [], log_level = Logger::INFO)
     @members = []
+    @log = Logger.new(STDOUT)
+    pp log_level
+    log.level = log_level
+    original_formatter = Logger::Formatter.new
+    @log.formatter = proc { |severity,datetime,progname,msg|
+      original_formatter.call(severity,datetime,self.class.to_s,msg)
+    }
     threads = []
     members.each do |url|
       threads << Thread.new do
-        @members << HAProxyCluster::Member.new(url)
+        @members << HAProxyCluster::Member.new(url,@log)
       end
     end
     threads.each{|t|t.join}
   end
 
-  attr_accessor :members
+  attr_accessor :members, :log
 
   # Poll the cluster, executing the given block with fresh data at the
   # prescribed interval.
@@ -57,7 +65,7 @@ class HAProxyCluster
   # * :condition, anything accepted by `check_condition`
   # * :interval, check interval (default 2 seconds, same as HA Proxy) 
   # * :timeout, give up after this number of seconds 
-  # * :min_checks, require :condition to pass this many times in a row
+  # * :min_checks, require :condition consecutive positive results 
   #
   def wait_until (options = {}, &code)
     opts = {
@@ -73,7 +81,10 @@ class HAProxyCluster
 
         # Break out as soon as we reach :min_checks in a row
         history << check_condition(opts[:condition], results.values.flatten)
-        return true if history.last(opts[:min_checks]) == [true] * opts[:min_checks]
+        if history.last(opts[:min_checks]) == [true] * opts[:min_checks]
+          log.info { "Ok, we've seen #{opts[:min_checks]} consecutive successful results." }
+          return true
+        end
 
         sleep opts[:interval]
         each_member { poll! }
