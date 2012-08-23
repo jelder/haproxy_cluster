@@ -43,7 +43,7 @@ Perhaps there's a particular server which needs to be removed from the cluster q
 haproxy_cluster --eval 'each_member{ myapp.servers.find("server3").disable! }' $load_balancers
 ```
 
-Read the full [documentation](http://rubydoc.info/gems/haproxy-cluster/0.0.8/frames).
+Read the full [documentation](http://rubydoc.info/gems/haproxy-cluster/frames).
 
 Installation
 ------------
